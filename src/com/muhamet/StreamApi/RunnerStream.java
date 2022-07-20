@@ -1,6 +1,8 @@
 package com.muhamet.StreamApi;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class RunnerStream {
@@ -54,10 +56,67 @@ public class RunnerStream {
 		Stream<Integer> sonsuz3 = Stream.iterate(500_000,n-> n<501_501 ,n -> n+100); // sonsuz
 		
 		sonsuz3.forEach(System.out::println);
+		/**
+		 * bir paragraf olsun bunun kelimeleri üzerinde arama ve sorgulama yapacaksýnýz
+		 * kullanýlmayan ya da hatalý olan kelimeleri silip paragrafý tekrardan
+		 * birleþtireceksiniz diyelim.
+		 * String paragraf = "";
+		 * String[] pList = paragraf.split(" ");
+		 */
+		var kelimeDizisi = new String[] {"M","u","r","a","t"};
+		String ifade="";
+		for(String kelime: kelimeDizisi) ifade += kelime;
+		System.out.println(ifade);
+	
+		Stream<String> streamIfade = Stream.of("M","u","r","a","t");
+		/**
+		 * Stream içinde var olan listeyi iþleyebileceðimiz methodlar bardýr. bunlardan 
+		 * birisi de reduce methodudur. bu method belirlenen bir kurala göre iþlem yapar.
+		 * s1-> mevcut kayýt
+		 * s2-> sonraki kayýt
+		 */
+		/**
+		 * DÝKKAT!!!!! Ayný deðiþken ayný isimle tekrar tanýmlanamaz
+		 * 1-> M+u -> Mu
+		 * 2-> Mu+r -> Mur
+		 * 3-> Mur+a ->Mura
+		 */
+		String ifadeYeni = 	streamIfade.reduce("", (s1,s2) -> s1+s2); 
+		System.out.println(ifadeYeni);
 		
+		Stream<Integer> sayiStream = Stream.of(1,2,3,4,5);
+		System.out.println(sayiStream.reduce(1, (s1,s2) -> s1*s2));
 		
+		Stream<String> isimListesi = Stream.of("Ali","Ahmet","Canan", "Bahadýr","Muhammet","Su");
+		Optional<String> enKisaIsim = 
+				isimListesi.min((MevcutIsim,SonrakiIsim)->MevcutIsim.length()-SonrakiIsim.length());
+		enKisaIsim.ifPresent(System.out::println);
 		
+		/**
+		 * Arama -> filitrelemek
+		 */
+		System.out.println("********** ARAMA  **********");
+		Stream<String> isimListesiArama = Stream.of("Ali","Ahmet","Canan", "Bahadýr","Muhammet","Su");
+		//isimListesiArama.filter(x-> x.contains("a")).forEach(System.out::println);
+		//isimListesiArama.filter(x-> x.startsWith("A")).forEach(System.out::println);
+		// isimListesiArama.filter(x-> x.length()<=3).forEach(System.out::println);
 		
-				
+		/**
+		 * Personel Listesi ->
+		 */
+		List<Personel> personelListesi = new ArrayList<Personel>();
+		personelListesi.add(new Personel("Ahmet", "YENÝ"));
+		personelListesi.add(new Personel("Canan", "TAÞ"));
+		personelListesi.add(new Personel("Selim", "HAKKI"));
+		personelListesi.add(new Personel("Hakký", "TURAN"));
+		personelListesi.add(new Personel("Tufan", "BELLÝ"));
+		personelListesi.add(new Personel("Deniz", "BÜLBÜL"));
+		/**
+		 *  Adýnda a geçenleri bulalým ????
+		 */
+		personelListesi.stream()
+					   .filter(x->x.getAd().contains("a") && x.getSoyad().toLowerCase().contains("e"))
+					   .forEach(System.out::println);
+		
 	}// Main
 }//Class
